@@ -1,56 +1,65 @@
-import { createContext, useContext, useState } from "react";
+import { useAppContext } from "../../app/providers/AppProvider";
 import { AuthService } from "../../services/auth.service";
+import {
+  asEntity,
+  getTokenFromAuthPayload,
+  getUserFromAuthPayload,
+} from "../../utils/helpers";
 
-const AuthContext = createContext();
+export function useAuth() {
+  const { auth, login, logout } = useAppContext();
 
-export const AuthProvider = ({ children }) => {
-  const storedUser = localStorage.getItem("user");
-  const storedToken = localStorage.getItem("token");
+  const loginUser = async (credentials) => {
+    const payload = await AuthService.login(credentials);
+    const token = getTokenFromAuthPayload(payload);
 
-  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
-  const [token, setToken] = useState(storedToken || null);
+    if (!token) {
+      throw new Error("Token not found in login response");
+    }
 
-  const login = async (credentials) => {
-    const data = await AuthService.login(credentials);
+    let user = getUserFromAuthPayload(payload) || { email: credentials?.email || "" };
 
-    const userData = data.user || data.data || null;
-    const tokenData = data.token || data.data?.token;
+    login({
+      token,
+      user,
+    });
 
-    setUser(userData);
-    setToken(tokenData);
+    if (!getUserFromAuthPayload(payload)) {
+      try {
+        const mePayload = await AuthService.getCurrentUser(token);
+        user = asEntity(mePayload, ["user"]) || user;
+        login({ token, user });
+      } catch (error) {
+        console.warn("Unable to hydrate current user after login", error);
+      }
+    }
 
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("token", tokenData);
-
-    return data;
+    return payload;
   };
 
-  const register = async (userData) => {
-    return await AuthService.register(userData);
+  const registerUser = async (userData) => {
+    const payload = await AuthService.register(userData);
+    const token = getTokenFromAuthPayload(payload);
+
+    if (token) {
+      const user = getUserFromAuthPayload(payload) || {
+        name: userData?.name || "",
+        email: userData?.email || "",
+        role: userData?.role || "USER",
+      };
+
+      login({ token, user });
+    }
+
+    return payload;
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+  return {
+    user: auth?.user || null,
+    token: auth?.token || null,
+    isAuthenticated: Boolean(auth?.isAuthenticated),
+    loginUser,
+    registerUser,
+    logout,
   };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        login,
-        register,
-        logout,
-        isAuthenticated: !!token,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
+}

@@ -2,8 +2,8 @@ const AUTH = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
   ME: "/auth/me",
-  USER_PUBLIC_PROFILE: (id) => `/users/${id}/public`,
-  MY_ORDERS_FROM_AUTH: "/users/me/orders",
+  USER_PUBLIC_PROFILE: (id) => `/auth/${id}/public`,
+  MY_ORDERS_FROM_AUTH: "/auth/me/orders",
 };
 
 const PRODUCTS = {

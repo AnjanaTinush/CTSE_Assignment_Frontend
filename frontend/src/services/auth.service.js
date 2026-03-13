@@ -11,8 +11,16 @@ const register = async (data) => {
   return response.data;
 };
 
-const getCurrentUser = async () => {
-  const response = await apiClient.get(API_ENDPOINTS.AUTH.ME);
+const getCurrentUser = async (token) => {
+  const config = token
+    ? {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    : undefined;
+
+  const response = await apiClient.get(API_ENDPOINTS.AUTH.ME, config);
   return response.data;
 };
 

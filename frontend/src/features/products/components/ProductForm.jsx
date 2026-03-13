@@ -1,80 +1,36 @@
-import { useState } from "react";
-import { useProducts } from "../productSlice";
+import Input from "../../../components/ui/Input";
+import Button from "../../../components/ui/Button";
 
-export default function ProductForm() {
-
-    const { createProduct } = useProducts();
-
-    const [form, setForm] = useState({
-        name: "",
-        description: "",
-        price: "",
-    });
-
-    const [loading, setLoading] = useState(false);
-
-    const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-
-        try {
-            setLoading(true);
-
-            await createProduct(form);
-
-            setForm({
-                name: "",
-                description: "",
-                price: "",
-            });
-
-            alert("Product created successfully");
-
-        } finally {
-            setLoading(false);
-        }
-    };
-
+export default function ProductForm({ form, onChange, onSubmit, loading }) {
     return (
-        <form onSubmit={submitHandler} className="product-form">
+        <form
+            onSubmit={onSubmit}
+            className="grid gap-3 rounded-xl border border-[#edf0f7] p-4 md:grid-cols-3"
+        >
+            <Input label="Name" name="name" value={form.name} onChange={onChange} required />
 
-            <h3>Create Product</h3>
-
-            <input
-                name="name"
-                placeholder="Product name"
-                value={form.name}
-                onChange={handleChange}
-                required
-            />
-
-            <textarea
+            <Input
+                label="Description"
                 name="description"
-                placeholder="Description"
                 value={form.description}
-                onChange={handleChange}
+                onChange={onChange}
                 required
             />
 
-            <input
-                type="number"
+            <Input
+                label="Price"
                 name="price"
-                placeholder="Price"
+                type="number"
                 value={form.price}
-                onChange={handleChange}
+                onChange={onChange}
                 required
             />
 
-            <button disabled={loading}>
-                {loading ? "Creating..." : "Create Product"}
-            </button>
-
+            <div className="md:col-span-3">
+                <Button type="submit" disabled={loading}>
+                    {loading ? "Creating..." : "Create Product"}
+                </Button>
+            </div>
         </form>
     );
 }

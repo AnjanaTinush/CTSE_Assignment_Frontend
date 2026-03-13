@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { authStore } from "../store/authStore";
 import apiClient from "../../api/apiClient";
@@ -22,9 +24,9 @@ export function AppProvider({ children }) {
       authStore.clearAuth();
     };
 
-    window.addEventListener("auth:unauthorized", handleUnauthorized);
+    globalThis.addEventListener("auth:unauthorized", handleUnauthorized);
     return () => {
-      window.removeEventListener("auth:unauthorized", handleUnauthorized);
+      globalThis.removeEventListener("auth:unauthorized", handleUnauthorized);
     };
   }, []);
 
@@ -40,13 +42,14 @@ export function AppProvider({ children }) {
       try {
         const response = await apiClient.get(API_ENDPOINTS.AUTH.ME);
         const user =
-          response?.data?.user ?? response?.data?.data ?? response?.data;
+          response?.data?.user ?? response?.data?.data ?? response?.data ?? null;
 
         authStore.setAuth({
           token,
           user,
         });
       } catch (error) {
+        console.warn("Auth bootstrap failed, clearing local session", error);
         authStore.clearAuth();
       } finally {
         setIsBootstrapping(false);

@@ -2,7 +2,7 @@ import axios from "axios";
 import { authStore } from "../app/store/authStore";
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3300",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:30300",
   headers: {
     "Content-Type": "application/json",
   },
@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
 
     if (status === 401) {
       authStore.clearAuth();
-      window.dispatchEvent(new Event("auth:unauthorized"));
+      globalThis.dispatchEvent(new Event("auth:unauthorized"));
     }
 
     return Promise.reject({

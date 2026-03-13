@@ -1,6 +1,5 @@
-import { useContext } from "react";
-import { AuthProvider } from "../features/auth/authSlice";
+import { useAuth as useFeatureAuth } from "../features/auth/authSlice";
 
 export const useAuth = () => {
-    return useContext(AuthProvider);
+    return useFeatureAuth();
 };

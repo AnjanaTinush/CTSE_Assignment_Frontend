@@ -15,7 +15,26 @@ export const ORDER_STATUS = {
     DELIVERED: "DELIVERED",
 };
 
+export const ORDER_STATUS_OPTIONS = [
+    "PENDING",
+    "PROCESSING",
+    "CONFIRMED",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+];
+
 export const PRODUCT_STATUS = {
     AVAILABLE: "AVAILABLE",
     RESERVED: "RESERVED",
 };
+
+export const DELIVERY_STATUS_OPTIONS = [
+    "PENDING",
+    "ASSIGNED",
+    "DISPATCHED",
+    "ON_ROUTE",
+    "DELIVERED",
+    "FAILED",
+    "CANCELLED",
+];

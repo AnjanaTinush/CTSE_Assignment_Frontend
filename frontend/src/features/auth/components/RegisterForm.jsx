@@ -1,94 +1,62 @@
-import { useState } from "react";
-import { useAuth } from "../authSlice";
-import { useNavigate } from "react-router-dom";
+import Button from "../../../components/ui/Button";
+import Input from "../../../components/ui/Input";
+import ErrorMessage from "../../../components/ui/ErrorMessage";
 
-export default function RegisterForm() {
-  const navigate = useNavigate();
-  const { register } = useAuth();
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "USER",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-      setError("");
-
-      await register(form);
-
-      navigate("/login");
-    } catch (err) {
-      setError("Registration failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function RegisterForm({ form, onChange, onSubmit, loading, error }) {
   return (
-    <form onSubmit={submitHandler} className="space-y-4">
-      <div>
-        <label>Name</label>
-        <input
-          type="text"
-          name="name"
-          required
-          onChange={handleChange}
-          className="input"
-        />
-      </div>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <Input
+        label="Name"
+        type="text"
+        name="name"
+        value={form.name}
+        required
+        autoComplete="name"
+        onChange={onChange}
+      />
+
+      <Input
+        label="Email"
+        type="email"
+        name="email"
+        value={form.email}
+        required
+        autoComplete="email"
+        onChange={onChange}
+      />
+
+      <Input
+        label="Password"
+        type="password"
+        name="password"
+        value={form.password}
+        required
+        autoComplete="new-password"
+        onChange={onChange}
+      />
 
       <div>
-        <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          onChange={handleChange}
-          className="input"
-        />
-      </div>
-
-      <div>
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          required
-          onChange={handleChange}
-          className="input"
-        />
-      </div>
-
-      <div>
-        <label>Role</label>
-        <select name="role" onChange={handleChange} className="input">
+        <label htmlFor="register-role" className="mb-1 block text-sm font-medium text-[#374151]">
+          Role
+        </label>
+        <select
+          id="register-role"
+          name="role"
+          value={form.role}
+          onChange={onChange}
+          className="w-full rounded-xl border border-[#d9dde8] bg-white px-3 py-2.5 text-sm text-[#1f2937] outline-none transition focus:border-[#1a73e8] focus:ring-2 focus:ring-[#d2e3fc]"
+        >
           <option value="USER">USER</option>
           <option value="ADMIN">ADMIN</option>
           <option value="DELIVERY">DELIVERY</option>
         </select>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      <ErrorMessage message={error} />
 
-      <button disabled={loading} className="w-full btn-primary">
-        {loading ? "Registering..." : "Register"}
-      </button>
+      <Button type="submit" disabled={loading} className="w-full">
+        {loading ? "Creating account..." : "Create Account"}
+      </Button>
     </form>
   );
 }

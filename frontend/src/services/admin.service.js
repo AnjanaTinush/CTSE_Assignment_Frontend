@@ -22,16 +22,18 @@ const createProduct = async (productData) => {
     return response.data;
 };
 
-const reserveProduct = async (productId) => {
-    const response = await apiClient.post(
-        API_ENDPOINTS.PRODUCTS.RESERVE(productId)
+const reserveProduct = async (productId, payload = {}) => {
+    const response = await apiClient.patch(
+        API_ENDPOINTS.PRODUCTS.RESERVE(productId),
+        payload
     );
     return response.data;
 };
 
-const releaseProduct = async (productId) => {
-    const response = await apiClient.post(
-        API_ENDPOINTS.PRODUCTS.RELEASE(productId)
+const releaseProduct = async (productId, payload = {}) => {
+    const response = await apiClient.patch(
+        API_ENDPOINTS.PRODUCTS.RELEASE(productId),
+        payload
     );
     return response.data;
 };
