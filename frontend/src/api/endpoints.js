@@ -2,6 +2,7 @@ const AUTH = {
   LOGIN: "/auth/login",
   REGISTER: "/auth/register",
   ME: "/auth/me",
+  GET_ALL_USERS: "/auth/users",
   USER_PUBLIC_PROFILE: (id) => `/auth/${id}/public`,
   MY_ORDERS_FROM_AUTH: "/auth/me/orders",
 };

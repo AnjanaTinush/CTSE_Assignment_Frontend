@@ -11,6 +11,11 @@ const register = async (data) => {
   return response.data;
 };
 
+const getAllUsers = async () => {
+  const response = await apiClient.get(API_ENDPOINTS.AUTH.GET_ALL_USERS);
+  return response.data;
+};
+
 const getCurrentUser = async (token) => {
   const config = token
     ? {
@@ -31,6 +36,7 @@ const logout = () => {
 export const AuthService = {
   login,
   register,
+  getAllUsers,
   getCurrentUser,
   logout,
 };
