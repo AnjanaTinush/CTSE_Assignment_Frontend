@@ -45,7 +45,7 @@ export default function DeliveryPortalPage() {
 
   useEffect(() => { loadDeliveries(); }, [loadDeliveries]);
 
-  const handleUpdateStatus = async (deliveryId, status) => {
+  const handleUpdateStatus = async (deliveryId, status, failureReason) => {
     setActionError("");
     setActionSuccess("");
     setActionLoading(`${deliveryId}:${status}`);
@@ -53,6 +53,7 @@ export default function DeliveryPortalPage() {
       await DeliveryService.updateDeliveryStatus(deliveryId, {
         status,
         notes: notesByDelivery[deliveryId] || undefined,
+        failureReason: failureReason || undefined,
       });
       setActionSuccess("Status updated successfully.");
       await loadDeliveries();
