@@ -165,24 +165,44 @@ export default function DeliveryPortalPage() {
           completedCount={completedCount}
         />
 
-        {/* New Feature: Driver Milestone Progress */}
+        {/* New Feature: Driver Milestone Progress & Level Up */}
         <div className="mb-8 rounded-3xl border-2 border-slate-200 bg-white p-6 transition-all hover:bg-slate-50/50">
           <div className="flex items-center justify-between mb-4">
-             <div>
-               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Daily Milestone</h4>
-               <p className="text-sm font-black text-slate-700">Level up your driver rank</p>
+             <div className="flex items-center gap-3">
+               <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border-2 font-black text-xl ${
+                 completedCount > 25 ? 'border-amber-200 bg-amber-50 text-amber-600' :
+                 completedCount > 10 ? 'border-slate-200 bg-slate-50 text-slate-600' : 'border-orange-200 bg-orange-50 text-orange-600'
+               }`}>
+                 {completedCount > 25 ? 'L3' : completedCount > 10 ? 'L2' : 'L1'}
+               </div>
+               <div>
+                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Driver Status</h4>
+                 <p className="text-sm font-black text-slate-700">
+                   {completedCount > 25 ? 'Legendary Courier' : completedCount > 10 ? 'Professional Driver' : 'Junior Runner'}
+                 </p>
+               </div>
              </div>
-             <span className="text-xs font-black text-primary p-2 bg-primary/10 rounded-xl">Goal: 10 Completed</span>
+             <div className="text-right">
+                <span className="text-[10px] font-black text-primary p-2 bg-primary/10 rounded-xl uppercase tracking-widest">
+                  {completedCount > 25 ? 'Max Level' : `${(completedCount > 10 ? 26 : 11) - completedCount} tasks to next level`}
+                </span>
+             </div>
           </div>
           <div className="relative h-3 w-full rounded-full bg-slate-100 overflow-hidden">
             <div 
-              className="absolute inset-y-0 left-0 bg-primary transition-all duration-1000 ease-out"
-              style={{ width: `${Math.min((completedCount / 10) * 100, 100)}%` }}
+              className={`absolute inset-y-0 left-0 transition-all duration-1000 ease-out ${
+                completedCount > 25 ? 'bg-amber-500' : completedCount > 10 ? 'bg-slate-500' : 'bg-orange-500'
+              }`}
+              style={{ width: `${Math.min((completedCount / (completedCount > 10 ? 26 : 11)) * 100, 100)}%` }}
             />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{completedCount} / 10 Tasks</span>
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{Math.min((completedCount / 10) * 100, 100).toFixed(0)}% Towards Bonus</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              Level {completedCount > 25 ? '3' : completedCount > 10 ? '2' : '1'} Progress
+            </span>
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+              {completedCount} Total Tasks Completed
+            </span>
           </div>
         </div>
 

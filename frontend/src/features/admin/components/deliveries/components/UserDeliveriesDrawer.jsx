@@ -34,11 +34,28 @@ const UserDeliveriesDrawer = ({ isOpen, user, deliveries, normalizeRole, onClose
             {/* Profile Info Section */}
             <div className="bg-white border-b-2 border-slate-200 p-6 mb-2">
               <div className="flex items-start gap-5">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl border-2 border-primary/20 bg-primary/5 font-black text-primary text-2xl">
-                  {user?.name?.substring(0, 2).toUpperCase()}
+                <div className="relative shrink-0">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-primary/20 bg-primary/5 font-black text-primary text-2xl shadow-inner">
+                    {user?.name?.substring(0, 2).toUpperCase()}
+                  </div>
+                  {/* Level Badge Overlay */}
+                  <div className={`absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white font-black text-[8px] ${
+                    deliveries.filter(d => d.status === 'COMPLETED').length > 25 ? 'bg-amber-400 text-white' : 
+                    deliveries.filter(d => d.status === 'COMPLETED').length > 10 ? 'bg-slate-400 text-white' : 'bg-orange-400 text-white'
+                  }`}>
+                    L{deliveries.filter(d => d.status === 'COMPLETED').length > 25 ? '3' : deliveries.filter(d => d.status === 'COMPLETED').length > 10 ? '2' : '1'}
+                  </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-black text-slate-800 truncate">{user?.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-black text-slate-800 truncate">{user?.name}</h3>
+                    <span className={`inline-flex rounded-lg px-2 py-0.5 text-[9px] font-black uppercase tracking-widest ${
+                      deliveries.filter(d => d.status === 'COMPLETED').length > 25 ? 'bg-amber-100 text-amber-600' : 
+                      deliveries.filter(d => d.status === 'COMPLETED').length > 10 ? 'bg-slate-100 text-slate-600' : 'bg-orange-100 text-orange-600'
+                    }`}>
+                      {deliveries.filter(d => d.status === 'COMPLETED').length > 25 ? 'Legendary' : deliveries.filter(d => d.status === 'COMPLETED').length > 10 ? 'Pro' : 'Junior'}
+                    </span>
+                  </div>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-xs font-black uppercase tracking-widest text-slate-400">Driver ID:</span>
                     <span className="text-xs font-bold text-slate-600 truncate">#{resolveEntityId(user)?.substring(0, 12)}</span>
@@ -46,12 +63,14 @@ const UserDeliveriesDrawer = ({ isOpen, user, deliveries, normalizeRole, onClose
                   
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-3">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Contact</p>
-                      <p className="mt-0.5 text-xs font-black text-slate-700">{user?.contactNumber || user?.email || "No contact"}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Efficiency</p>
+                      <p className="mt-0.5 text-xs font-black text-slate-700">
+                        {deliveries.length > 0 ? ((deliveries.filter(d => d.status === 'COMPLETED').length / deliveries.length) * 100).toFixed(0) : 0}% SR
+                      </p>
                     </div>
                     <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-3">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loyalty Points</p>
-                      <p className="mt-0.5 text-xs font-black text-primary">{user?.loyaltyPoints ?? 0} pts</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Completions</p>
+                      <p className="mt-0.5 text-xs font-black text-primary">{deliveries.filter(d => d.status === 'COMPLETED').length}</p>
                     </div>
                   </div>
 
