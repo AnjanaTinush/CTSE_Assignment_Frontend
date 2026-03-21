@@ -5,6 +5,7 @@ import ErrorMessage from "../../../components/ui/ErrorMessage";
 import Loader from "../../../components/ui/Loader";
 import { AuthService } from "../../../services/auth.service";
 import { ProductService } from "../../../services/product.service";
+import { CategoryService } from "../../../services/category.service";
 import { OrderService } from "../../../services/order.service";
 import { DeliveryService } from "../../../services/delivery.service";
 import { asCollection } from "../../../utils/helpers";
@@ -13,6 +14,7 @@ import OverviewDashboard from "../components/dashbaord/OverviewDashboard";
 import AdminUserManagement from "../components/users/AdminUserManagement";
 import DeliveryUserManagement from "../components/users/DeliveryUserManagement";
 import ProductManagement from "../components/products/ProductManagement";
+import CategoryManagement from "../components/products/CategoryManagement";
 import OrderManagement from "../components/orders/OrderManagement";
 import DeliveryManagement from "../components/deliveries/DeliveryManagement";
 import { useUserStore } from "../components/users/userStore";
@@ -26,6 +28,7 @@ const ADMIN_TABS = new Set([
   "admins",
   "deliveryUsers",
   "products",
+  "categories",
   "orders",
   "deliveries",
 ]);
@@ -74,6 +77,7 @@ export default function AdminPortalPage() {
     DELIVERY: [],
   });
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [orders, setOrders] = useState([]);
   const [deliveries, setDeliveries] = useState([]);
 
@@ -96,6 +100,11 @@ export default function AdminPortalPage() {
   const loadProducts = useCallback(async () => {
     const response = await ProductService.getAllProducts();
     setProducts(asCollection(response, ["products"]));
+  }, []);
+
+  const loadCategories = useCallback(async () => {
+    const response = await CategoryService.getAllCategories();
+    setCategories(Array.isArray(response) ? response : []);
   }, []);
 
   const loadOrders = useCallback(async () => {
@@ -124,6 +133,7 @@ export default function AdminPortalPage() {
       await Promise.all([
         loadUsers(),
         loadProducts(),
+        loadCategories(),
         loadOrders(),
         loadDeliveries(),
       ]);
@@ -136,7 +146,7 @@ export default function AdminPortalPage() {
     } finally {
       setLoadingAll(false);
     }
-  }, [loadDeliveries, loadOrders, loadProducts, loadUsers]);
+  }, [loadDeliveries, loadOrders, loadProducts, loadCategories, loadUsers]);
 
   useEffect(() => {
     reloadAll();
@@ -192,6 +202,27 @@ export default function AdminPortalPage() {
     } finally {
       setActionLoading("");
     }
+  };
+
+  const handleCategoryCreate = async (form) => {
+    await runAction("create-category", async () => {
+      await CategoryService.createCategory({ name: form.name.trim(), description: form.description.trim() });
+      await loadCategories();
+    }, "Category created successfully");
+  };
+
+  const handleCategoryUpdate = async (id, form) => {
+    await runAction(`update-category:${id}`, async () => {
+      await CategoryService.updateCategory(id, { name: form.name.trim(), description: form.description.trim() });
+      await loadCategories();
+    }, "Category updated successfully");
+  };
+
+  const handleCategoryDelete = async (id) => {
+    await runAction(`delete-category:${id}`, async () => {
+      await CategoryService.deleteCategory(id);
+      await loadCategories();
+    }, "Category deleted successfully");
   };
 
   const {
@@ -348,10 +379,26 @@ export default function AdminPortalPage() {
             handleProductCreate={handleProductCreate}
             actionLoading={actionLoading}
             products={products}
+            categories={categories}
             setEditingProduct={setEditingProduct}
             handleProductDelete={handleProductDelete}
             editingProduct={editingProduct}
             handleProductUpdate={handleProductUpdate}
+          />
+        </ManagementSection>
+      ) : null}
+
+      {activeTab === "categories" ? (
+        <ManagementSection
+          title="Category Management"
+          description="Add, update, and view product categories."
+        >
+          <CategoryManagement
+            categories={categories}
+            onCategoryCreate={handleCategoryCreate}
+            onCategoryUpdate={handleCategoryUpdate}
+            onCategoryDelete={handleCategoryDelete}
+            actionLoading={actionLoading}
           />
         </ManagementSection>
       ) : null}

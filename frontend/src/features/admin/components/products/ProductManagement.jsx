@@ -11,6 +11,7 @@ const ProductManagement = ({
   handleProductCreate,
   actionLoading,
   products,
+  categories,
   setEditingProduct,
   handleProductDelete,
   editingProduct,
@@ -40,6 +41,7 @@ const ProductManagement = ({
         setProductForm={setProductForm}
         handleProductCreate={handleProductCreate}
         actionLoading={actionLoading}
+        categories={categories}
       />
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -180,6 +182,7 @@ const ProductManagement = ({
         setEditingProduct={setEditingProduct}
         handleProductUpdate={handleProductUpdate}
         actionLoading={actionLoading}
+        categories={categories}
       />
 
       <ProductDetailsDrawer

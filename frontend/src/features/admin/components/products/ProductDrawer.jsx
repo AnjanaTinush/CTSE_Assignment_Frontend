@@ -7,6 +7,7 @@ const ProductDrawer = ({
   setProductForm,
   handleProductCreate,
   actionLoading,
+  categories,
 }) => {
   if (!isOpen) return null;
 
@@ -54,7 +55,7 @@ const ProductDrawer = ({
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-500" htmlFor="category">
                   Category
                 </label>
-                <input
+                <select
                   id="category"
                   value={productForm.category}
                   onChange={(event) =>
@@ -63,9 +64,13 @@ const ProductDrawer = ({
                       category: event.target.value,
                     }))
                   }
-                  placeholder="Enter category"
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10"
-                />
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition-all focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10"
+                >
+                  <option value="">Select a category</option>
+                  {(categories || []).map((cat) => (
+                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
