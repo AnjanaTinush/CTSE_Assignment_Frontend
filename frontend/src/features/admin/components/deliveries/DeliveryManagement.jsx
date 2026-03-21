@@ -6,6 +6,7 @@ import DeliveryStats from "./components/DeliveryStats";
 import AssignDeliveryDrawer from "./components/AssignDeliveryDrawer";
 import UserDeliveriesDrawer from "./components/UserDeliveriesDrawer";
 import DeliveryTable from "./components/DeliveryTable";
+import PerformanceInsights from "./components/PerformanceInsights";
 
 const DeliveryManagement = ({
   activeDeliveryView = "manage",
@@ -67,8 +68,13 @@ const DeliveryManagement = ({
             totalCount={deliveries.length}
             usersCount={deliveryUsers.length}
           />
+
+          <PerformanceInsights 
+            deliveries={deliveries}
+            deliveryUsers={deliveryUsers}
+          />
           
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-2 mt-8">
             <div className="flex space-x-2 w-full sm:w-auto p-1 bg-slate-100 rounded-2xl border-2 border-slate-100">
               <button
                 onClick={() => setManageTab("pending")}

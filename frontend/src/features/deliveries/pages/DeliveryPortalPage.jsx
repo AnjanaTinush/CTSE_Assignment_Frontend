@@ -165,6 +165,27 @@ export default function DeliveryPortalPage() {
           completedCount={completedCount}
         />
 
+        {/* New Feature: Driver Milestone Progress */}
+        <div className="mb-8 rounded-3xl border-2 border-slate-200 bg-white p-6 transition-all hover:bg-slate-50/50">
+          <div className="flex items-center justify-between mb-4">
+             <div>
+               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Daily Milestone</h4>
+               <p className="text-sm font-black text-slate-700">Level up your driver rank</p>
+             </div>
+             <span className="text-xs font-black text-primary p-2 bg-primary/10 rounded-xl">Goal: 10 Completed</span>
+          </div>
+          <div className="relative h-3 w-full rounded-full bg-slate-100 overflow-hidden">
+            <div 
+              className="absolute inset-y-0 left-0 bg-primary transition-all duration-1000 ease-out"
+              style={{ width: `${Math.min((completedCount / 10) * 100, 100)}%` }}
+            />
+          </div>
+          <div className="flex justify-between mt-2">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{completedCount} / 10 Tasks</span>
+            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{Math.min((completedCount / 10) * 100, 100).toFixed(0)}% Towards Bonus</span>
+          </div>
+        </div>
+
         <div className="mb-6 flex space-x-2 border-b border-slate-200">
           <button
             onClick={() => setActiveTab("upcoming")}
