@@ -131,7 +131,7 @@ export default function OrderHistory({
   }, [selectedOrderId]);
 
   return (
-    <div className="overflow-hidden rounded-[32px] border border-[#e7e5df] bg-[#fffdfa] shadow-[0_22px_80px_rgba(15,23,42,0.08)]">
+    <div className="overflow-hidden rounded-2xl border border-line bg-white shadow-xl">
       <div className="grid min-h-[760px] gap-0 xl:grid-cols-[320px_minmax(0,1fr)]">
         <ClientOrders
           filteredOrders={filteredOrders}
