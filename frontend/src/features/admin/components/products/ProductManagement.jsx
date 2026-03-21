@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { formatMoney, resolveEntityId } from "../../../../utils/helpers";
+import ProductSummary from "./ProductSummary";
+import ProductDrawer from "./ProductDrawer";
 
 const ProductManagement = ({
   productForm,
@@ -11,96 +14,32 @@ const ProductManagement = ({
   editingProduct,
   handleProductUpdate,
 }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   return (
     <>
-      <div className="rounded-xl border border-[#e5edf8] bg-[#f9fbff] p-4">
-        <div className="grid gap-2 md:grid-cols-2">
-          <input
-            value={productForm.name}
-            onChange={(event) =>
-              setProductForm((prev) => ({
-                ...prev,
-                name: event.target.value,
-              }))
-            }
-            placeholder="Product name"
-            className="rounded-xl border border-[#d4dce9] px-3 py-2 text-sm outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#dbeafe]"
-          />
-          <input
-            value={productForm.category}
-            onChange={(event) =>
-              setProductForm((prev) => ({
-                ...prev,
-                category: event.target.value,
-              }))
-            }
-            placeholder="Category"
-            className="rounded-xl border border-[#d4dce9] px-3 py-2 text-sm outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#dbeafe]"
-          />
-          <input
-            type="number"
-            min="0"
-            value={productForm.price}
-            onChange={(event) =>
-              setProductForm((prev) => ({
-                ...prev,
-                price: event.target.value,
-              }))
-            }
-            placeholder="Price"
-            className="rounded-xl border border-[#d4dce9] px-3 py-2 text-sm outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#dbeafe]"
-          />
-          <input
-            type="number"
-            min="0"
-            value={productForm.stock}
-            onChange={(event) =>
-              setProductForm((prev) => ({
-                ...prev,
-                stock: event.target.value,
-              }))
-            }
-            placeholder="Stock"
-            className="rounded-xl border border-[#d4dce9] px-3 py-2 text-sm outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#dbeafe]"
-          />
-          <input
-            value={productForm.imageUrl}
-            onChange={(event) =>
-              setProductForm((prev) => ({
-                ...prev,
-                imageUrl: event.target.value,
-              }))
-            }
-            placeholder="Image URL (optional)"
-            className="rounded-xl border border-[#d4dce9] px-3 py-2 text-sm outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#dbeafe] md:col-span-2"
-          />
-          <textarea
-            rows={2}
-            value={productForm.description}
-            onChange={(event) =>
-              setProductForm((prev) => ({
-                ...prev,
-                description: event.target.value,
-              }))
-            }
-            placeholder="Description"
-            className="rounded-xl border border-[#d4dce9] px-3 py-2 text-sm outline-none focus:border-[#1d4ed8] focus:ring-2 focus:ring-[#dbeafe] md:col-span-2"
-          />
-        </div>
+      <ProductSummary products={products} />
 
+      <div className="mb-4 mt-2 flex items-center justify-between">
+        <h2 className="text-lg font-bold text-[#0f172a]">Products List</h2>
         <button
-          type="button"
-          onClick={handleProductCreate}
-          disabled={actionLoading === "create-product"}
-          className="mt-3 rounded-full bg-[#1d4ed8] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1e40af] disabled:opacity-50"
+          onClick={() => setIsDrawerOpen(true)}
+          className="rounded-full bg-[#1d4ed8] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#1e40af]"
         >
-          {actionLoading === "create-product"
-            ? "Creating..."
-            : "Create Product"}
+          + Add Product
         </button>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-[#e5edf8]">
+      <ProductDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        productForm={productForm}
+        setProductForm={setProductForm}
+        handleProductCreate={handleProductCreate}
+        actionLoading={actionLoading}
+      />
+
+      <div className="overflow-x-auto rounded-xl border border-[#e5edf8]">
         <table className="min-w-full border-collapse">
           <thead className="bg-[#f8fbff]">
             <tr>
