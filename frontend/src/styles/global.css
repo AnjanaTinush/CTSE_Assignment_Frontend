@@ -46,3 +46,10 @@ a {
   background: #d2e3fc;
   color: #1f2937;
 }
+
+.gradient-border {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(to right, #0a6cdf, #39a833, #f3c90d, #fc3613) border-box;
+}

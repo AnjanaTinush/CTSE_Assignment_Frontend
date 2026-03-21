@@ -8,7 +8,7 @@ export const formatCurrency = (amount, currency = "LKR") => {
     }).format(Number.isFinite(numeric) ? numeric : 0);
 };
 
-export const formatMoney = (amount) => formatCurrency(amount, "USD");
+export const formatMoney = (amount) => formatCurrency(amount, "LKR");
 
 export const formatDate = (value) => {
     if (!value) {

@@ -104,7 +104,7 @@ const MakeOrder = ({
 
   return (
     <div className="overflow-hidden rounded-3xl border border-line bg-white shadow-xl">
-      <div className="grid min-h-[760px] gap-0 xl:grid-cols-[165px_minmax(0,1fr)_460px]">
+      <div className="grid min-h-[760px] gap-0 xl:grid-cols-[165px_minmax(0,1fr)_700px]">
         {/* Category Section */}
         <aside className="border-b border-line bg-white p-5 xl:border-b-0 xl:border-r">
           <CategorySection

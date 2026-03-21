@@ -38,22 +38,19 @@ const OrderSection = ({
       <aside className="p-5 bg-white xl:p-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-[30px] font-semibold tracking-[-0.03em] text-[#111827]">
+            <h3 className="text-2xl font-semibold tracking-[-0.03em] text-label">
               Order
             </h3>
             <p className="mt-1 text-sm text-[#8b95a7]">
               Verify customer loyalty, set delivery, and complete the order.
             </p>
           </div>
-          <div className="rounded-2xl border border-[#efeae2] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9a8f7a]">
-            Admin POS
-          </div>
         </div>
 
-        <div className="mt-6 rounded-[28px] border border-[#ece6dc] bg-[#fdfaf5] p-4">
+        <div className="mt-6 rounded-2xl border border-line bg-white p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8f7a]">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-word">
                 Customer
               </p>
               <p className="mt-1 text-base font-semibold text-[#111827]">
