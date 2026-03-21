@@ -218,11 +218,14 @@ export default function AdminPortalPage() {
   const {
     orderForm,
     setOrderForm,
+    orderCustomer,
+    setOrderCustomer,
     orderStatusDrafts,
     setOrderStatusDrafts,
     orderAssignmentDrafts,
     setOrderAssignmentDrafts,
     handleAddItemToOrderDraft,
+    handleLookupOrCreateOrderCustomer,
     handleCreateOrderByAdmin,
     handleAssignDeliveryToOrder,
     handleOrderStatusUpdate,
@@ -363,8 +366,11 @@ export default function AdminPortalPage() {
             activeOrderView={activeOrderView}
             orderForm={orderForm}
             setOrderForm={setOrderForm}
+            orderCustomer={orderCustomer}
+            setOrderCustomer={setOrderCustomer}
             products={products}
             handleAddItemToOrderDraft={handleAddItemToOrderDraft}
+            handleLookupOrCreateOrderCustomer={handleLookupOrCreateOrderCustomer}
             handleCreateOrderByAdmin={handleCreateOrderByAdmin}
             actionLoading={actionLoading}
             orders={orders}

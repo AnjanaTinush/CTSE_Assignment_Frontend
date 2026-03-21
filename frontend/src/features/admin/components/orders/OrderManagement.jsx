@@ -6,8 +6,11 @@ const OrderManagement = ({
   activeOrderView,
   orderForm,
   setOrderForm,
+  orderCustomer,
+  setOrderCustomer,
   products,
   handleAddItemToOrderDraft,
+  handleLookupOrCreateOrderCustomer,
   handleCreateOrderByAdmin,
   actionLoading,
   orders,
@@ -55,8 +58,11 @@ const OrderManagement = ({
         <MakeOrder
           orderForm={orderForm}
           setOrderForm={setOrderForm}
+          orderCustomer={orderCustomer}
+          setOrderCustomer={setOrderCustomer}
           products={products}
           handleAddItemToOrderDraft={handleAddItemToOrderDraft}
+          handleLookupOrCreateOrderCustomer={handleLookupOrCreateOrderCustomer}
           handleCreateOrderByAdmin={handleCreateOrderByAdmin}
           actionLoading={actionLoading}
         />
