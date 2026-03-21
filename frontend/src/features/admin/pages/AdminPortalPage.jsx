@@ -222,12 +222,9 @@ export default function AdminPortalPage() {
     setOrderCustomer,
     orderStatusDrafts,
     setOrderStatusDrafts,
-    orderAssignmentDrafts,
-    setOrderAssignmentDrafts,
     handleAddItemToOrderDraft,
     handleLookupOrCreateOrderCustomer,
     handleCreateOrderByAdmin,
-    handleAssignDeliveryToOrder,
     handleOrderStatusUpdate,
     handleCancelOrderAsAdmin,
     handleDeleteOrder,
@@ -377,11 +374,7 @@ export default function AdminPortalPage() {
             normalizeRole={normalizeRole}
             orderStatusDrafts={orderStatusDrafts}
             setOrderStatusDrafts={setOrderStatusDrafts}
-            orderAssignmentDrafts={orderAssignmentDrafts}
-            setOrderAssignmentDrafts={setOrderAssignmentDrafts}
-            deliveryUsers={deliveryUsers}
             handleOrderStatusUpdate={handleOrderStatusUpdate}
-            handleAssignDeliveryToOrder={handleAssignDeliveryToOrder}
             handleCancelOrderAsAdmin={handleCancelOrderAsAdmin}
             handleDeleteOrder={handleDeleteOrder}
           />

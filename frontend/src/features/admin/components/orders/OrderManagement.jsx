@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import MakeOrder from "./make_order/MakeOrder";
 import OrderHistory from "./order_history/OrderHistory";
 
@@ -17,11 +16,7 @@ const OrderManagement = ({
   normalizeRole,
   orderStatusDrafts,
   setOrderStatusDrafts,
-  orderAssignmentDrafts,
-  setOrderAssignmentDrafts,
-  deliveryUsers,
   handleOrderStatusUpdate,
-  handleAssignDeliveryToOrder,
   handleCancelOrderAsAdmin,
   handleDeleteOrder,
 }) => {
@@ -74,11 +69,7 @@ const OrderManagement = ({
           normalizeRole={normalizeRole}
           orderStatusDrafts={orderStatusDrafts}
           setOrderStatusDrafts={setOrderStatusDrafts}
-          orderAssignmentDrafts={orderAssignmentDrafts}
-          setOrderAssignmentDrafts={setOrderAssignmentDrafts}
-          deliveryUsers={deliveryUsers}
           handleOrderStatusUpdate={handleOrderStatusUpdate}
-          handleAssignDeliveryToOrder={handleAssignDeliveryToOrder}
           handleCancelOrderAsAdmin={handleCancelOrderAsAdmin}
           handleDeleteOrder={handleDeleteOrder}
           actionLoading={actionLoading}
