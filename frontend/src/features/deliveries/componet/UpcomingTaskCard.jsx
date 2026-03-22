@@ -21,22 +21,22 @@ const PRIORITY_BADGE = {
 
 /* ── Action buttons ───────────────────────────────────── */
 const DELIVERY_ACTIONS = [
-  { status: "PICKED_UP",             label: "Mark Picked Up",  icon: "📦", tone: "bg-[#1d4ed8] hover:bg-[#1e40af] text-white border-transparent" },
+  { status: "PICKED_UP",             label: "Mark Picked Up",  icon: "📦", tone: "bg-primary hover:bg-primary/90 text-white border-transparent" },
   { status: "OUT_FOR_DELIVERY",      label: "Out for Delivery", icon: "🚚", tone: "bg-indigo-600 hover:bg-indigo-700 text-white border-transparent" },
-  { status: "COMPLETED",             label: "Mark Delivered",   icon: "✅", tone: "bg-[#15803d] hover:bg-[#166534] text-white border-transparent" },
-  { status: "CANCELLED_BY_DELIVERY", label: "Cancel / Issue",   icon: "⚠️", tone: "border border-[#fecaca] bg-[#fff1f2] hover:bg-[#ffe4e6] text-[#b91c1c]" },
+  { status: "COMPLETED",             label: "Mark Delivered",   icon: "✅", tone: "bg-success hover:bg-success/90 text-white border-transparent" },
+  { status: "CANCELLED_BY_DELIVERY", label: "Cancel / Issue",   icon: "⚠️", tone: "border border-danger/30 bg-white hover:bg-danger/5 text-danger" },
 ];
 
 /* ── Small icon-row helper ────────────────────────────── */
 function InfoRow({ icon, label, children, highlight }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-[#ece6dc] bg-[#fdfaf5] text-[#9a8f7a]">
+      <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-line bg-white text-word">
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9a8f7a]">{label}</p>
-        <div className={`mt-0.5 text-sm font-medium leading-snug ${highlight || "text-[#374151]"}`}>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-word">{label}</p>
+        <div className={`mt-0.5 text-sm font-medium leading-snug ${highlight || "text-label"}`}>
           {children}
         </div>
       </div>
@@ -57,8 +57,8 @@ function StatusStepper({ currentStatus }) {
             <div className="flex flex-col items-center gap-1 flex-shrink-0">
               <div className={`flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all ${
                 done
-                  ? "border-[#1d4ed8] bg-[#1d4ed8]"
-                  : "border-[#ddd4c7] bg-white"
+                  ? "border-primary bg-primary"
+                  : "border-line bg-white"
               }`}>
                 {done && (
                   <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -67,14 +67,14 @@ function StatusStepper({ currentStatus }) {
                 )}
               </div>
               <p className={`text-[9px] font-semibold uppercase tracking-wide text-center whitespace-nowrap ${
-                current ? "text-[#1d4ed8]" : done ? "text-[#6b7280]" : "text-[#c4bfb7]"
+                current ? "text-primary" : done ? "text-word" : "text-line"
               }`}>
                 {STATUS_FLOW_LABELS[step]}
               </p>
             </div>
             {i < STATUS_FLOW.length - 1 && (
               <div className={`flex-1 h-0.5 mx-1 rounded-full transition-all ${
-                i < currentIdx ? "bg-[#1d4ed8]" : "bg-[#ece6dc]"
+                i < currentIdx ? "bg-primary" : "bg-line"
               }`} />
             )}
           </React.Fragment>

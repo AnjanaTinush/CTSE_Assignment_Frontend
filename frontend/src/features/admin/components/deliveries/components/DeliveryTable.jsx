@@ -6,13 +6,13 @@ import {
   DELIVERY_STATUS_OPTIONS
 } from "../../../../../utils/constants";
 
-const th = "px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-400";
-const td = "px-5 py-4 text-sm text-slate-700";
+const th = "px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-word";
+const td = "px-5 py-4 text-sm text-word";
 
 const PRIORITY_BADGE = {
-  URGENT: "bg-rose-50 text-rose-700 border border-rose-200",
-  HIGH:   "bg-amber-50 text-amber-700 border border-amber-200",
-  NORMAL: "bg-slate-100 text-slate-500 border border-slate-200",
+  URGENT: "bg-danger/5 text-danger border border-danger/20",
+  HIGH:   "bg-warning/5 text-warning border border-warning/20",
+  NORMAL: "bg-white text-word border border-line",
 };
 
 const DeliveryTable = ({
@@ -39,11 +39,11 @@ const DeliveryTable = ({
     : (manageTab === "pending" ? pendingOrders.length : deliveries.length);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-line bg-white shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4">
-        <h3 className="text-sm font-semibold text-slate-800">{getTitle()}</h3>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+      <div className="flex items-center justify-between border-b border-line bg-white px-5 py-4">
+        <h3 className="text-sm font-semibold text-label">{getTitle()}</h3>
+        <span className="rounded-full bg-white border border-line px-3 py-1 text-xs font-semibold text-word">
           {count} total
         </span>
       </div>
@@ -52,7 +52,7 @@ const DeliveryTable = ({
         {/* ── Active Delivery Users ── */}
         {viewMode === "active" ? (
           <table className="min-w-full border-collapse text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-[#fcfaf6] border-b border-line">
               <tr>
                 <th className={th}>User ID</th>
                 <th className={th}>Name</th>
@@ -62,39 +62,39 @@ const DeliveryTable = ({
                 <th className={`${th} text-right`}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {deliveryUsers.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-slate-400">No delivery users found</td>
+                  <td colSpan="6" className="px-5 py-12 text-center text-sm text-word">No delivery users found</td>
                 </tr>
               ) : (
                 deliveryUsers.map((user) => {
                   const uid = resolveEntityId(user);
                   return (
-                    <tr key={uid} className="hover:bg-slate-50 transition-colors">
+                    <tr key={uid} className="hover:bg-white transition-colors">
                       <td className={td}>
-                        <span className="rounded bg-slate-100 px-2 py-1 text-xs font-mono text-slate-500">
+                        <span className="rounded bg-white border border-line px-2 py-1 text-xs font-mono text-word">
                           #{uid.substring(0, 8)}
                         </span>
                       </td>
                       <td className={td}>
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1d4ed8]/10 text-[#1d4ed8] text-xs font-bold">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">
                             {user.name?.substring(0, 2).toUpperCase()}
                           </div>
-                          <span className="font-medium text-slate-800">{user.name}</span>
+                          <span className="font-medium text-label">{user.name}</span>
                         </div>
                       </td>
-                      <td className={`${td} text-slate-500`}>{user.email || user.contactNumber || 'N/A'}</td>
+                      <td className={`${td} text-word/70`}>{user.email || user.contactNumber || 'N/A'}</td>
                       <td className={td}>
-                        <span className="font-semibold text-[#1d4ed8]">{user.loyaltyPoints ?? 0}</span>
-                        <span className="ml-1 text-xs text-slate-400">pts</span>
+                        <span className="font-semibold text-primary">{user.loyaltyPoints ?? 0}</span>
+                        <span className="ml-1 text-xs text-word/50">pts</span>
                       </td>
                       <td className={td}>
                         <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
                           user.isActive
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : "bg-rose-50 text-rose-700 border border-rose-200"
+                            ? "bg-success/5 text-success border border-success/20"
+                            : "bg-danger/5 text-danger border border-danger/20"
                         }`}>
                           {user.isActive ? "Active" : "Disabled"}
                         </span>
@@ -102,7 +102,7 @@ const DeliveryTable = ({
                       <td className={`${td} text-right`}>
                         <button
                           onClick={() => onViewUserDetails(user)}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:border-[#1d4ed8] hover:text-[#1d4ed8]"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-1.5 text-xs font-semibold text-word transition-colors hover:border-primary hover:text-primary"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -121,7 +121,7 @@ const DeliveryTable = ({
         /* ── Pending Orders ── */
         ) : manageTab === "pending" ? (
           <table className="min-w-full border-collapse text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-[#fcfaf6] border-b border-line">
               <tr>
                 <th className={th}>Order ID</th>
                 <th className={th}>Customer</th>
@@ -133,40 +133,40 @@ const DeliveryTable = ({
                 <th className={`${th} text-right`}>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-line">
               {pendingOrders.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="px-5 py-12 text-center text-sm text-slate-400">No pending orders found</td>
+                  <td colSpan="8" className="px-5 py-12 text-center text-sm text-word">No pending orders found</td>
                 </tr>
               ) : (
                 pendingOrders.map((order) => {
                   const oid = resolveEntityId(order);
                   return (
-                    <tr key={oid} className="hover:bg-slate-50 transition-colors">
+                    <tr key={oid} className="hover:bg-white transition-colors">
                       <td className={td}>
-                        <span className="rounded bg-slate-100 px-2 py-1 text-xs font-mono text-slate-500">
+                        <span className="rounded bg-white border border-line px-2 py-1 text-xs font-mono text-word">
                           #{String(oid).substring(0, 8)}
                         </span>
                       </td>
-                      <td className={`${td} font-medium text-slate-800`}>{order.customerName || "Customer"}</td>
-                      <td className={`${td} max-w-xs truncate text-slate-500`}>{order.deliveryLocation?.address || "No address"}</td>
+                      <td className={`${td} font-medium text-label`}>{order.customerName || "Customer"}</td>
+                      <td className={`${td} max-w-xs truncate text-word/70`}>{order.deliveryLocation?.address || "No address"}</td>
                       <td className={td}>
                         <span className="font-medium">{order.items?.length || 0}</span>
-                        <span className="ml-1 text-xs text-slate-400">items</span>
+                        <span className="ml-1 text-xs text-word/50">items</span>
                       </td>
                       <td className={td}>
-                        <span className="rounded bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600 uppercase">
+                        <span className="rounded bg-white border border-line px-2 py-1 text-xs font-medium text-word uppercase">
                           {order.paymentMethod?.replace(/_/g, ' ') || "N/A"}
                         </span>
                       </td>
                       <td className={td}>
-                        <span className="font-semibold text-[#1d4ed8]">{order.totalAmount ? `$${order.totalAmount}` : "N/A"}</span>
+                        <span className="font-semibold text-primary">{order.totalAmount ? `$${order.totalAmount}` : "N/A"}</span>
                       </td>
-                      <td className={`${td} text-slate-400 text-xs`}>{formatDate(order.createdAt)}</td>
+                      <td className={`${td} text-word/40 text-xs`}>{formatDate(order.createdAt)}</td>
                       <td className={`${td} text-right`}>
                         <button
                           onClick={() => onAssignOrder(oid)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#1d4ed8] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#1e40af]"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary/90"
                         >
                           Assign
                         </button>
@@ -177,6 +177,7 @@ const DeliveryTable = ({
               )}
             </tbody>
           </table>
+
 
         /* ── All Deliveries ── */
         ) : (

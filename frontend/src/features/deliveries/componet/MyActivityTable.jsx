@@ -9,21 +9,21 @@ const PRIORITY_DOT = {
 };
 
 const PRIORITY_LABEL = {
-  URGENT: { text: "Urgent",  cls: "text-rose-600 bg-rose-50 border-rose-200" },
-  HIGH:   { text: "High",    cls: "text-amber-600 bg-amber-50 border-amber-200" },
-  NORMAL: { text: "Normal",  cls: "text-[#6b7280] bg-slate-50 border-slate-200" },
+  URGENT: { text: "Urgent",  cls: "text-danger bg-danger/5 border-danger/20" },
+  HIGH:   { text: "High",    cls: "text-warning bg-warning/5 border-warning/20" },
+  NORMAL: { text: "Normal",  cls: "text-word bg-white border-line" },
 };
 
 const STATUS_ICON = {
-  COMPLETED:             { bg: "bg-[#f3fbf5] border-[#c6e6d0]", dot: "bg-emerald-500" },
-  CANCELLED_BY_DELIVERY: { bg: "bg-rose-50 border-rose-200",    dot: "bg-rose-500" },
-  FAILED:                { bg: "bg-rose-50 border-rose-200",    dot: "bg-rose-500" },
-  RETURNED:              { bg: "bg-amber-50 border-amber-200",  dot: "bg-amber-400" },
+  COMPLETED:             { bg: "bg-success/5 border-success/20", dot: "bg-success" },
+  CANCELLED_BY_DELIVERY: { bg: "bg-danger/5 border-danger/20",    dot: "bg-danger" },
+  FAILED:                { bg: "bg-danger/5 border-danger/20",    dot: "bg-danger" },
+  RETURNED:              { bg: "bg-warning/5 border-warning/20",  dot: "bg-warning" },
 };
 
 function IconBox({ children }) {
   return (
-    <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-xl border border-[#ece6dc] bg-[#fdfaf5] text-[#9a8f7a]">
+    <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-xl border border-line bg-white text-word">
       {children}
     </span>
   );
@@ -32,9 +32,9 @@ function IconBox({ children }) {
 export default function MyActivityTable({ deliveries }) {
   if (!deliveries || deliveries.length === 0) {
     return (
-      <div className="col-span-full flex flex-col items-center justify-center gap-3 rounded-[28px] border border-dashed border-[#ddd4c7] bg-[#fcfaf6] py-16">
-        <span className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-[#e4ddd2] bg-white text-2xl">📋</span>
-        <p className="text-sm text-[#8b95a7]">No past activity recorded for today.</p>
+      <div className="col-span-full flex flex-col items-center justify-center gap-3 rounded-[28px] border border-dashed border-line bg-white py-16">
+        <span className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-line bg-white text-2xl">📋</span>
+        <p className="text-sm text-word">No past activity recorded for today.</p>
       </div>
     );
   }
@@ -44,10 +44,10 @@ export default function MyActivityTable({ deliveries }) {
       {/* Section header */}
       <div className="flex items-center justify-between px-1">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a8f7a]">History</p>
-          <h3 className="mt-0.5 text-base font-semibold text-[#111827]">My Activity Log</h3>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-word">History</p>
+          <h3 className="mt-0.5 text-base font-semibold text-label">My Activity Log</h3>
         </div>
-        <span className="rounded-2xl border border-[#e4ddd2] bg-white px-3 py-1 text-xs font-semibold text-[#6b7280]">
+        <span className="rounded-2xl border border-line bg-white px-3 py-1 text-xs font-semibold text-word">
           {deliveries.length} {deliveries.length === 1 ? "record" : "records"}
         </span>
       </div>
@@ -58,7 +58,7 @@ export default function MyActivityTable({ deliveries }) {
         const status = String(delivery?.status || "ASSIGNED").toUpperCase();
         const priorityKey = String(delivery?.priority || "NORMAL").toUpperCase();
         const priorityCfg  = PRIORITY_LABEL[priorityKey] || PRIORITY_LABEL.NORMAL;
-        const statusStyle  = STATUS_ICON[status] || { bg: "bg-[#f9fbff] border-[#e5edf8]", dot: "bg-slate-400" };
+        const statusStyle  = STATUS_ICON[status] || { bg: "bg-white border-line", dot: "bg-word" };
         const hasFailure   = !!delivery.failureReason;
         const isOverdue    = delivery.estimatedDeliveryTime && status !== "COMPLETED" &&
                              new Date(delivery.estimatedDeliveryTime) < new Date();
@@ -66,18 +66,18 @@ export default function MyActivityTable({ deliveries }) {
         return (
           <div
             key={id}
-            className="overflow-hidden rounded-[24px] border border-[#ece6dc] bg-[#fffdfa]"
+            className="overflow-hidden rounded-[24px] border border-line bg-white shadow-sm"
           >
             {/* Top row: order ID + priority + status */}
-            <div className="flex items-center justify-between border-b border-[#efeae2] bg-[#fcfaf6] px-5 py-3.5">
+            <div className="flex items-center justify-between border-b border-line bg-white px-5 py-3.5">
               <div className="flex items-center gap-3">
                 {/* Status indicator dot */}
                 <span className={`inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg border ${statusStyle.bg}`}>
                   <span className={`h-2 w-2 rounded-full ${statusStyle.dot}`} />
                 </span>
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#9a8f7a]">Order</p>
-                  <p className="font-mono text-xs font-semibold text-[#374151]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-word">Order</p>
+                  <p className="font-mono text-xs font-semibold text-label">
                     #{String(delivery.orderId || id).substring(0, 10).toUpperCase()}
                   </p>
                 </div>
@@ -94,7 +94,7 @@ export default function MyActivityTable({ deliveries }) {
             </div>
 
             {/* Details */}
-            <div className="divide-y divide-[#f5f0ea] px-5">
+            <div className="divide-y divide-line px-5">
 
               {/* Address */}
               {delivery?.deliveryLocation?.address && (
