@@ -185,8 +185,8 @@ export default function UserOrdersPage() {
     } catch (error) {
       setActionError(
         error?.friendlyMessage ||
-        error?.message ||
-        "Failed to update pending order",
+          error?.message ||
+          "Failed to update pending order",
       );
     } finally {
       setActionLoading("");
@@ -222,37 +222,49 @@ export default function UserOrdersPage() {
 
   return (
     <div className="relative mx-auto w-full max-w-[1180px] px-4 pb-10 pt-6 sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 bg-gradient-to-b from-[#e0f2fe] via-[#f8fafc] to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-64 bg-white pointer-events-none -z-10" />
 
-      <div className="rounded-3xl border border-[#d4e3f1] bg-white p-5 shadow-[0_18px_44px_rgba(15,23,42,0.08)]">
+      <div className="p-5 bg-white border rounded-3xl border-line">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold text-[#0f172a]">My Orders</h1>
-            <p className="mt-1 text-sm text-[#64748b]">
+            <h1 className="text-2xl font-semibold text-label">My Orders</h1>
+            <p className="mt-1 text-sm text-word">
               Review, track, edit, and cancel pending orders.
             </p>
           </div>
           <button
             type="button"
             onClick={loadOrders}
-            className="rounded-full border border-[#cad8e7] px-4 py-2 text-xs font-semibold text-[#334155] transition hover:bg-[#f8fbff]"
+            className="px-4 py-2 text-xs font-semibold transition border rounded-full border-line text-word hover:bg-white"
           >
             Refresh
           </button>
         </div>
 
-        <div className="mt-4 grid gap-2 sm:grid-cols-3">
-          <div className="rounded-2xl border border-[#d8e5f2] bg-[#f8fbff] px-3 py-2">
-            <p className="text-[11px] uppercase tracking-wide text-[#64748b]">Total</p>
-            <p className="text-lg font-semibold text-[#0f172a]">{orders.length}</p>
+        <div className="grid gap-2 mt-4 sm:grid-cols-3">
+          <div className="px-3 py-2 bg-white rounded-2xl gradient-border">
+            <p className="text-[11px] uppercase tracking-wide text-word">
+              Total
+            </p>
+            <p className="text-lg font-semibold text-label">
+              {orders.length}
+            </p>
           </div>
-          <div className="rounded-2xl border border-[#d8e5f2] bg-[#f8fbff] px-3 py-2">
-            <p className="text-[11px] uppercase tracking-wide text-[#64748b]">Pending</p>
-            <p className="text-lg font-semibold text-[#0369a1]">{pendingCount}</p>
+          <div className="px-3 py-2 bg-white rounded-2xl gradient-border">
+            <p className="text-[11px] uppercase tracking-wide text-word">
+              Pending
+            </p>
+            <p className="text-lg font-semibold text-word">
+              {pendingCount}
+            </p>
           </div>
-          <div className="rounded-2xl border border-[#d8e5f2] bg-[#f8fbff] px-3 py-2">
-            <p className="text-[11px] uppercase tracking-wide text-[#64748b]">Completed</p>
-            <p className="text-lg font-semibold text-[#0f766e]">{completedCount}</p>
+          <div className="px-3 py-2 bg-white rounded-2xl gradient-border">
+            <p className="text-[11px] uppercase tracking-wide text-word">
+              Completed
+            </p>
+            <p className="text-lg font-semibold text-word">
+              {completedCount}
+            </p>
           </div>
         </div>
       </div>
@@ -260,15 +272,17 @@ export default function UserOrdersPage() {
       <ErrorMessage message={state.error} />
       <ErrorMessage message={actionError} />
       <ErrorMessage
-        message={actionSuccess ? { message: actionSuccess, severity: "success" } : ""}
+        message={
+          actionSuccess ? { message: actionSuccess, severity: "success" } : ""
+        }
       />
 
       {state.loading ? <Loader text="Loading your orders..." /> : null}
 
       {state.loading || orders.length ? null : (
-        <div className="mt-4 rounded-2xl border border-[#dbe5f7] bg-white p-6 text-sm text-[#64748b]">
+        <div className="p-6 mt-4 text-sm bg-white border rounded-2xl border-line text-word">
           No orders yet. Start shopping from{" "}
-          <Link className="font-semibold text-[#0f766e] underline" to="/">
+          <Link className="font-semibold underline text-success" to="/">
             home
           </Link>
           .
@@ -286,29 +300,37 @@ export default function UserOrdersPage() {
             return (
               <article
                 key={orderId}
-                className="rounded-3xl border border-[#d8e4f1] bg-white p-5 shadow-[0_12px_34px_rgba(15,23,42,0.06)]"
+                className="p-5 bg-white border shadow-xl rounded-3xl border-line"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs uppercase tracking-wide text-[#64748b]">Order</p>
-                    <h2 className="text-lg font-semibold text-[#0f172a]">{orderId}</h2>
-                    <p className="mt-1 text-xs text-[#64748b]">Placed on {formatDate(order?.createdAt)}</p>
+                    <p className="text-xs tracking-wide uppercase text-word">
+                      Order
+                    </p>
+                    <h2 className="text-lg font-semibold text-label">
+                      {orderId}
+                    </h2>
+                    <p className="mt-1 text-xs text-word">
+                      Placed on {formatDate(order?.createdAt)}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <StatusPill status={status} />
                     <Link
                       to={`/orders/${orderId}/tracking`}
-                      className="rounded-full border border-[#cad7e6] px-3 py-1 text-xs font-semibold text-[#334155] transition hover:bg-[#f8fbff]"
+                      className="px-3 py-1 text-xs font-semibold transition border rounded-full border-line text-word hover:bg-white"
                     >
                       Track
                     </Link>
                   </div>
                 </div>
 
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <div className="rounded-2xl border border-[#e3ebf5] bg-[#f8fbff] p-3">
-                    <p className="text-xs uppercase tracking-wide text-[#64748b]">Items</p>
-                    <ul className="mt-2 space-y-1 text-sm text-[#334155]">
+                <div className="grid gap-3 mt-3 md:grid-cols-2">
+                  <div className="p-3 bg-white border rounded-2xl border-line">
+                    <p className="text-xs tracking-wide uppercase text-word">
+                      Items
+                    </p>
+                    <ul className="mt-2 space-y-1 text-sm text-word">
                       {(order?.items || []).map((item) => (
                         <li
                           key={`${orderId}-${item.productId}`}
@@ -321,35 +343,45 @@ export default function UserOrdersPage() {
                     </ul>
                   </div>
 
-                  <div className="rounded-2xl border border-[#e3ebf5] bg-[#f8fbff] p-3 text-sm text-[#334155]">
-                    <p className="text-xs uppercase tracking-wide text-[#64748b]">Billing</p>
-                    <p className="mt-2">Subtotal: {formatMoney(order?.subtotal)}</p>
+                  <div className="p-3 text-sm bg-white border rounded-2xl border-line text-word">
+                    <p className="text-xs tracking-wide uppercase text-word">
+                      Billing
+                    </p>
+                    <p className="mt-2">
+                      Subtotal: {formatMoney(order?.subtotal)}
+                    </p>
                     <p>Loyalty used: {order?.loyaltyPointsUsed || 0}</p>
                     <p>Total: {formatMoney(order?.totalAmount)}</p>
-                    <p className="mt-2 text-xs text-[#64748b]">
+                    <p className="mt-2 text-xs text-word">
                       Payment: {order?.paymentMethod || "CASH_ON_DELIVERY"}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-[#e3ebf5] bg-[#f8fbff] p-3 text-sm text-[#334155]">
-                  <p className="text-xs uppercase tracking-wide text-[#64748b]">Delivery location</p>
-                  <p className="mt-1">{order?.deliveryLocation?.address || "N/A"}</p>
-                  <p className="text-xs text-[#64748b]">
+                <div className="p-3 mt-3 text-sm bg-white border rounded-2xl border-line text-word">
+                  <p className="text-xs tracking-wide uppercase text-word">
+                    Delivery location
+                  </p>
+                  <p className="mt-1">
+                    {order?.deliveryLocation?.address || "N/A"}
+                  </p>
+                  <p className="text-xs text-word">
                     {order?.deliveryLocation?.latitude || "-"},{" "}
                     {order?.deliveryLocation?.longitude || "-"}
                   </p>
                 </div>
 
                 {isPending ? (
-                  <div className="mt-4 space-y-3 rounded-2xl border border-[#f2dcc5] bg-[#fff8f1] p-3">
+                  <div className="p-3 mt-4 space-y-3 bg-white border rounded-2xl border-line">
                     <div className="flex flex-wrap items-center gap-2">
                       <button
                         type="button"
                         onClick={() =>
-                          isEditing ? setEditingOrderId("") : handleOpenEdit(order)
+                          isEditing
+                            ? setEditingOrderId("")
+                            : handleOpenEdit(order)
                         }
-                        className="rounded-full border border-[#d7c6af] px-3 py-1 text-xs font-semibold text-[#334155] transition hover:bg-white"
+                        className="px-3 py-1 text-xs font-semibold transition border rounded-full border-line text-word hover:bg-white"
                       >
                         {isEditing ? "Close Edit" : "Edit Pending Order"}
                       </button>
@@ -358,9 +390,11 @@ export default function UserOrdersPage() {
                         type="button"
                         disabled={actionLoading === `cancel:${orderId}`}
                         onClick={() => handleCancelOrder(orderId)}
-                        className="rounded-full bg-[#dc2626] px-3 py-1 text-xs font-semibold text-white transition hover:bg-[#b91c1c] disabled:opacity-50"
+                        className="px-3 py-1 text-xs font-semibold text-white transition rounded-full bg-danger hover:bg-danger/80 disabled:opacity-50"
                       >
-                        {actionLoading === `cancel:${orderId}` ? "Cancelling..." : "Cancel Order"}
+                        {actionLoading === `cancel:${orderId}`
+                          ? "Cancelling..."
+                          : "Cancel Order"}
                       </button>
                     </div>
 
@@ -373,12 +407,14 @@ export default function UserOrdersPage() {
                         }))
                       }
                       placeholder="Cancellation reason (optional)"
-                      className="w-full rounded-xl border border-[#dbc6aa] bg-white px-3 py-2 text-sm text-[#1f2937] outline-none transition focus:border-[#fb923c] focus:ring-2 focus:ring-[#ffedd5]"
+                      className="w-full px-3 py-2 text-sm bg-white border rounded-xl border-line text-word"
                     />
 
                     {isEditing && editDraft ? (
-                      <div className="space-y-3 rounded-2xl border border-[#e8d5bf] bg-white p-3">
-                        <p className="text-sm font-semibold text-[#1e293b]">Edit items and location</p>
+                      <div className="p-3 space-y-3 bg-white border rounded-2xl border-line">
+                        <p className="text-sm font-semibold text-word">
+                          Edit items and location
+                        </p>
 
                         <div className="space-y-2">
                           {editDraft.items.map((item) => (
@@ -386,15 +422,20 @@ export default function UserOrdersPage() {
                               key={`${orderId}-${item.productId}`}
                               className="flex items-center justify-between gap-3"
                             >
-                              <span className="text-sm text-[#334155]">{item.name}</span>
+                              <span className="text-sm text-word">
+                                {item.name}
+                              </span>
                               <input
                                 type="number"
                                 min="0"
                                 value={item.quantity}
                                 onChange={(event) =>
-                                  handleDraftQuantity(item.productId, event.target.value)
+                                  handleDraftQuantity(
+                                    item.productId,
+                                    event.target.value,
+                                  )
                                 }
-                                className="w-24 rounded-lg border border-[#d8c7ae] px-2 py-1 text-sm text-[#1f2937] outline-none focus:border-[#fb923c] focus:ring-2 focus:ring-[#ffedd5]"
+                                className="w-24 px-2 py-1 text-sm border rounded-lg border-line text-word"
                               />
                             </div>
                           ))}
@@ -413,7 +454,7 @@ export default function UserOrdersPage() {
                             }))
                           }
                           placeholder="Delivery address"
-                          className="w-full rounded-xl border border-[#d8c7ae] px-3 py-2 text-sm text-[#1f2937] outline-none focus:border-[#fb923c] focus:ring-2 focus:ring-[#ffedd5]"
+                          className="w-full px-3 py-2 text-sm border rounded-xl border-line text-word"
                         />
 
                         <LocationPickerMap
@@ -422,18 +463,21 @@ export default function UserOrdersPage() {
                           onChange={handleDraftLocationChange}
                         />
 
-                        <p className="rounded-xl border border-[#f1e2d0] bg-[#fffaf5] px-3 py-2 text-xs text-[#475569]">
-                          Selected coordinates: {editDraft.deliveryLocation.latitude || "-"},{" "}
+                        {/* <p className="px-3 py-2 text-xs bg-white border rounded-xl border-line text-word">
+                          Selected coordinates:{" "}
+                          {editDraft.deliveryLocation.latitude || "-"},{" "}
                           {editDraft.deliveryLocation.longitude || "-"}
-                        </p>
+                        </p> */}
 
                         <button
                           type="button"
                           disabled={actionLoading === `edit:${orderId}`}
                           onClick={() => handleSaveEdit(orderId)}
-                          className="rounded-full bg-[#ea580c] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#c2410c] disabled:opacity-50"
+                          className="px-4 py-2 text-sm font-semibold text-white transition rounded-full bg-primary hover:bg-primary/80 disabled:opacity-50"
                         >
-                          {actionLoading === `edit:${orderId}` ? "Saving..." : "Save Pending Order"}
+                          {actionLoading === `edit:${orderId}`
+                            ? "Saving..."
+                            : "Save Pending Order"}
                         </button>
                       </div>
                     ) : null}

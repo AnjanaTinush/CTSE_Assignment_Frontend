@@ -16,7 +16,7 @@ const ClientNavBar = ({ isUser, role, isLoggedIn, auth, logout }) => {
 
   const mainLinks = [
     { to: "/", label: "Home" },
-    { to: "/cart", label: "Cart" },
+    // { to: "/cart", label: "Cart" },
     { to: "/guide", label: "Guide" },
     { to: "/about", label: "About" },
     { to: "/contact", label: "Contact" },
@@ -145,14 +145,14 @@ const ClientNavBar = ({ isUser, role, isLoggedIn, auth, logout }) => {
               <NavLink
                 to="/privacy-policy"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-xl px-3 py-2"
+                className="px-3 py-2 rounded-xl"
               >
                 Privacy Policy
               </NavLink>
               <NavLink
                 to="/terms-and-conditions"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-xl px-3 py-2"
+                className="px-3 py-2 rounded-xl"
               >
                 Terms & Conditions
               </NavLink>
