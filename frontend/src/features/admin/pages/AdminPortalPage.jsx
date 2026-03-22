@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import ErrorMessage from "../../../components/ui/ErrorMessage";
+import { Alert, Snackbar } from "@mui/material";
 import Loader from "../../../components/ui/Loader";
 import { AuthService } from "../../../services/auth.service";
 import { ProductService } from "../../../services/product.service";
@@ -43,9 +43,9 @@ function normalizeRole(role) {
 
 function ManagementSection({ title, description, children }) {
   return (
-    <section className="rounded-2xl border border-[#e0e7f5] bg-white p-5 shadow-sm">
-      <h2 className="text-xl font-semibold text-[#0f172a]">{title}</h2>
-      <p className="mt-1 text-sm text-[#64748b]">{description}</p>
+    <section className="p-5 bg-white">
+      <h2 className="text-xl font-semibold text-label">{title}</h2>
+      <p className="mt-1 text-sm text-word">{description}</p>
       <div className="mt-4">{children}</div>
     </section>
   );
@@ -64,12 +64,19 @@ export default function AdminPortalPage() {
   const requestedOrderView = searchParams.get("orderView") || "make";
   const activeOrderView = requestedOrderView === "history" ? "history" : "make";
   const requestedDeliveryView = searchParams.get("deliveryView") || "manage";
-  const activeDeliveryView = ["manage", "active"].includes(requestedDeliveryView) ? requestedDeliveryView : "manage";
+  const activeDeliveryView = ["manage", "active"].includes(
+    requestedDeliveryView,
+  )
+    ? requestedDeliveryView
+    : "manage";
 
   const [loadingAll, setLoadingAll] = useState(true);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [actionLoading, setActionLoading] = useState("");
+  const [notification, setNotification] = useState({
+    open: false,
+    message: "",
+    severity: "info",
+  });
 
   const [usersByRole, setUsersByRole] = useState({
     USER: [],
@@ -82,6 +89,36 @@ export default function AdminPortalPage() {
   const [deliveries, setDeliveries] = useState([]);
 
   const deliveryUsers = usersByRole.DELIVERY;
+
+  const showNotification = useCallback((severity, message) => {
+    if (!message) {
+      return;
+    }
+
+    setNotification({
+      open: true,
+      message,
+      severity,
+    });
+  }, []);
+
+  const setErrorMessage = useCallback(
+    (message) => {
+      showNotification("error", message);
+    },
+    [showNotification],
+  );
+
+  const handleNotificationClose = (_, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setNotification((prev) => ({
+      ...prev,
+      open: false,
+    }));
+  };
 
   const loadUsers = useCallback(async () => {
     const [users, admins, deliveries] = await Promise.all([
@@ -127,7 +164,6 @@ export default function AdminPortalPage() {
 
   const reloadAll = useCallback(async () => {
     setLoadingAll(true);
-    setError("");
 
     try {
       await Promise.all([
@@ -138,7 +174,7 @@ export default function AdminPortalPage() {
         loadDeliveries(),
       ]);
     } catch (requestError) {
-      setError(
+      setErrorMessage(
         requestError?.friendlyMessage ||
           requestError?.message ||
           "Failed to load admin portal data",
@@ -146,7 +182,14 @@ export default function AdminPortalPage() {
     } finally {
       setLoadingAll(false);
     }
-  }, [loadDeliveries, loadOrders, loadProducts, loadCategories, loadUsers]);
+  }, [
+    loadDeliveries,
+    loadOrders,
+    loadProducts,
+    loadCategories,
+    loadUsers,
+    setErrorMessage,
+  ]);
 
   useEffect(() => {
     reloadAll();
@@ -181,22 +224,17 @@ export default function AdminPortalPage() {
     usersByRole.USER.length,
   ]);
 
-  const resetMessages = () => {
-    setError("");
-    setSuccess("");
-  };
-
   const runAction = async (loadingKey, handler, successMessage) => {
-    resetMessages();
     setActionLoading(loadingKey);
 
     try {
       await handler();
       if (successMessage) {
-        setSuccess(successMessage);
+        showNotification("success", successMessage);
       }
     } catch (actionError) {
-      setError(
+      showNotification(
+        "error",
         actionError?.friendlyMessage || actionError?.message || "Action failed",
       );
     } finally {
@@ -205,24 +243,42 @@ export default function AdminPortalPage() {
   };
 
   const handleCategoryCreate = async (form) => {
-    await runAction("create-category", async () => {
-      await CategoryService.createCategory({ name: form.name.trim(), description: form.description.trim() });
-      await loadCategories();
-    }, "Category created successfully");
+    await runAction(
+      "create-category",
+      async () => {
+        await CategoryService.createCategory({
+          name: form.name.trim(),
+          description: form.description.trim(),
+        });
+        await loadCategories();
+      },
+      "Category created successfully",
+    );
   };
 
   const handleCategoryUpdate = async (id, form) => {
-    await runAction(`update-category:${id}`, async () => {
-      await CategoryService.updateCategory(id, { name: form.name.trim(), description: form.description.trim() });
-      await loadCategories();
-    }, "Category updated successfully");
+    await runAction(
+      `update-category:${id}`,
+      async () => {
+        await CategoryService.updateCategory(id, {
+          name: form.name.trim(),
+          description: form.description.trim(),
+        });
+        await loadCategories();
+      },
+      "Category updated successfully",
+    );
   };
 
   const handleCategoryDelete = async (id) => {
-    await runAction(`delete-category:${id}`, async () => {
-      await CategoryService.deleteCategory(id);
-      await loadCategories();
-    }, "Category deleted successfully");
+    await runAction(
+      `delete-category:${id}`,
+      async () => {
+        await CategoryService.deleteCategory(id);
+        await loadCategories();
+      },
+      "Category deleted successfully",
+    );
   };
 
   const {
@@ -236,7 +292,7 @@ export default function AdminPortalPage() {
     handleCreateRoleUser,
     handleLookupOrCreateCustomer,
     handleAdjustLoyalty,
-  } = useUserStore({ runAction, setError, loadUsers });
+  } = useUserStore({ runAction, setError: setErrorMessage, loadUsers });
 
   const {
     productForm,
@@ -246,7 +302,7 @@ export default function AdminPortalPage() {
     handleProductCreate,
     handleProductUpdate,
     handleProductDelete,
-  } = useProductStore({ runAction, setError, loadProducts });
+  } = useProductStore({ runAction, setError: setErrorMessage, loadProducts });
 
   const {
     orderForm,
@@ -263,7 +319,7 @@ export default function AdminPortalPage() {
     handleDeleteOrder,
   } = useOrderStore({
     runAction,
-    setError,
+    setError: setErrorMessage,
     products,
     deliveryUsers,
     loadOrders,
@@ -281,7 +337,7 @@ export default function AdminPortalPage() {
     handleDeliveryStatusUpdate,
   } = useDeliveryStore({
     runAction,
-    setError,
+    setError: setErrorMessage,
     deliveryUsers,
     loadDeliveries,
     loadOrders,
@@ -298,14 +354,21 @@ export default function AdminPortalPage() {
 
   return (
     <div className="w-full">
-      <div className="mb-4 space-y-3">
-        <ErrorMessage message={error} />
-        {success ? (
-          <div className="rounded-xl border border-[#b7e4c7] bg-[#ebfff1] px-3 py-2 text-sm text-[#166534]">
-            {success}
-          </div>
-        ) : null}
-      </div>
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleNotificationClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleNotificationClose}
+          severity={notification.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
 
       {activeTab === "dashboard" ? (
         <ManagementSection
@@ -416,7 +479,9 @@ export default function AdminPortalPage() {
             setOrderCustomer={setOrderCustomer}
             products={products}
             handleAddItemToOrderDraft={handleAddItemToOrderDraft}
-            handleLookupOrCreateOrderCustomer={handleLookupOrCreateOrderCustomer}
+            handleLookupOrCreateOrderCustomer={
+              handleLookupOrCreateOrderCustomer
+            }
             handleCreateOrderByAdmin={handleCreateOrderByAdmin}
             actionLoading={actionLoading}
             orders={orders}

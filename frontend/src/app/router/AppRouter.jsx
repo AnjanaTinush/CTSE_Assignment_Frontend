@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import NotFoundPage from "./NotFoundPage";
@@ -13,8 +14,17 @@ import AdminPortalPage from "../../features/admin/pages/AdminPortalPage";
 import DeliveryPortalPage from "../../features/deliveries/pages/DeliveryPortalPage";
 import ClientNavBar from "../../components/layout/client/ClientNavBar";
 import AdminLayout from "../../components/layout/admin/AdminLayout";
+import ClientFooter from "../../components/layout/client/ClientFooter";
+import CartPage from "../../features/client/pages/CartPage";
+import ProfilePage from "../../features/client/pages/ProfilePage";
+import AboutPage from "../../features/client/pages/AboutPage";
+import GuidePage from "../../features/client/pages/GuidePage";
+import PrivacyPolicyPage from "../../features/client/pages/PrivacyPolicyPage";
+import TermsAndConditionsPage from "../../features/client/pages/TermsAndConditionsPage";
+import ContactPage from "../../features/client/pages/ContactPage";
 
 export default function AppRouter() {
+  const location = useLocation();
   const { auth, logout } = useAppContext();
   const role = resolveRole(auth?.user);
   const isLoggedIn = Boolean(auth?.isAuthenticated);
@@ -33,7 +43,18 @@ export default function AppRouter() {
             logout={logout}
           />
         ) : null}
-        {element}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+          >
+            {element}
+          </motion.div>
+        </AnimatePresence>
+        {showClientNav ? <ClientFooter /> : null}
       </>
     );
   };
@@ -41,6 +62,33 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={renderWithClientNav(<RoleAwareHome />)} />
+
+      <Route path="/cart" element={renderWithClientNav(<CartPage />)} />
+
+      <Route path="/about" element={renderWithClientNav(<AboutPage />)} />
+
+      <Route path="/guide" element={renderWithClientNav(<GuidePage />)} />
+
+      <Route path="/contact" element={renderWithClientNav(<ContactPage />)} />
+
+      <Route
+        path="/privacy-policy"
+        element={renderWithClientNav(<PrivacyPolicyPage />)}
+      />
+
+      <Route
+        path="/terms-and-conditions"
+        element={renderWithClientNav(<TermsAndConditionsPage />)}
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute allowedRoles={["USER"]}>
+            {renderWithClientNav(<ProfilePage />)}
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/my-orders"
