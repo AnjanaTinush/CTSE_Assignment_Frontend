@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { formatMoney, resolveEntityId } from "../../../../utils/helpers";
 import ProductSummary from "./ProductSummary";
 import ProductDrawer from "./ProductDrawer";
@@ -52,15 +53,38 @@ const ProductManagement = ({
                 <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px]">Product Details</th>
                 <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px]">Category</th>
                 <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px]">Price</th>
-                <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px]">Stock Status</th>
+                <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px]">Status</th>
+                <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px]">Units</th>
                 <th className="px-6 py-4 font-bold text-primary/70 uppercase tracking-wider text-[10px] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line/30">
               {products.map((product) => {
                 const id = resolveEntityId(product);
-                const isLowStock = parseInt(product.stock) < 10 && parseInt(product.stock) > 0;
-                const isOutOfStock = parseInt(product.stock) === 0;
+                const stockCount = Number(product.stock);
+                const isLowStock = stockCount < 10 && stockCount > 0;
+                const isOutOfStock = stockCount === 0;
+
+                let stockBadge;
+                if (isOutOfStock) {
+                  stockBadge = (
+                    <span className="inline-flex items-center rounded-full bg-danger/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-danger shadow-sm border border-danger/10">
+                      Out of Stock
+                    </span>
+                  );
+                } else if (isLowStock) {
+                  stockBadge = (
+                    <span className="inline-flex items-center rounded-full bg-warning/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-warning shadow-sm border border-warning/10">
+                      Low Stock
+                    </span>
+                  );
+                } else {
+                  stockBadge = (
+                    <span className="inline-flex items-center rounded-full bg-success/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-success shadow-sm border border-success/10">
+                      In Stock
+                    </span>
+                  );
+                }
 
                 return (
                   <tr key={id} className="hover:bg-primary/[0.02] transition-colors group">
@@ -96,21 +120,20 @@ const ProductManagement = ({
                       {formatMoney(product.price)}
                     </td>
                     <td className="px-6 py-4">
+                      {product.status === 'OUT-STORE' ? (
+                        <span className="inline-flex items-center rounded-full bg-word/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-word border border-line shadow-sm">
+                          Out-Store
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-primary/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-primary border border-primary/10 shadow-sm">
+                          In-Store
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
                       <div className="flex flex-col gap-1.5 items-start">
                         <span className="font-semibold text-label">{product.stock} units</span>
-                        {isOutOfStock ? (
-                          <span className="inline-flex items-center rounded-full bg-danger/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-danger shadow-sm border border-danger/10">
-                            Out of Stock
-                          </span>
-                        ) : isLowStock ? (
-                          <span className="inline-flex items-center rounded-full bg-warning/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-warning shadow-sm border border-warning/10">
-                            Low Stock
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-full bg-success/5 py-0.5 px-2.5 text-[10px] font-bold uppercase tracking-wider text-success shadow-sm border border-success/10">
-                            In Stock
-                          </span>
-                        )}
+                       
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -133,6 +156,7 @@ const ProductManagement = ({
                               ...product,
                               price: String(product.price ?? ""),
                               stock: String(product.stock ?? ""),
+                              status: product.status || "IN-STORE",
                               imageUrl: product.imageUrl || "",
                             })
                           }
@@ -192,6 +216,19 @@ const ProductManagement = ({
       />
     </>
   );
+};
+
+ProductManagement.propTypes = {
+  productForm: PropTypes.object,
+  setProductForm: PropTypes.func,
+  handleProductCreate: PropTypes.func,
+  actionLoading: PropTypes.string,
+  products: PropTypes.array,
+  categories: PropTypes.array,
+  setEditingProduct: PropTypes.func,
+  handleProductDelete: PropTypes.func,
+  editingProduct: PropTypes.object,
+  handleProductUpdate: PropTypes.func,
 };
 
 export default ProductManagement;

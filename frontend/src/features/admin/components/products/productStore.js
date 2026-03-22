@@ -8,6 +8,7 @@ const INITIAL_PRODUCT_FORM = {
   price: "",
   stock: "",
   category: "",
+  status: "IN-STORE",
   imageUrl: "",
 };
 
@@ -30,6 +31,7 @@ export function useProductStore({ runAction, setError, loadProducts }) {
           price: Number(productForm.price || 0),
           stock: Number(productForm.stock || 0),
           category: productForm.category.trim(),
+          status: productForm.status,
           imageUrl: productForm.imageUrl.trim() || undefined,
         });
 
@@ -56,6 +58,7 @@ export function useProductStore({ runAction, setError, loadProducts }) {
           price: Number(editingProduct.price),
           stock: Number(editingProduct.stock),
           category: editingProduct.category,
+          status: editingProduct.status,
           imageUrl: editingProduct.imageUrl || undefined,
         });
 

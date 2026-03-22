@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const inputClass =
   "w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm text-label outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10 placeholder:text-word/40";
@@ -18,7 +19,12 @@ const EditProductDrawer = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-label/30 backdrop-blur-sm" onClick={onClose} />
+      <button
+        type="button"
+        className="fixed inset-0 z-40 w-full h-full bg-label/30 backdrop-blur-sm cursor-default"
+        onClick={onClose}
+        aria-label="Close drawer"
+      />
 
       <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white border-l border-line shadow-2xl">
         <div className="flex h-full flex-col">
@@ -67,6 +73,26 @@ const EditProductDrawer = ({
                   {(categories || []).map((cat) => (
                     <option key={cat._id} value={cat.name}>{cat.name}</option>
                   ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-word">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className={labelClass} htmlFor="edit-status">Product Status</label>
+              <div className="relative">
+                <select
+                  id="edit-status"
+                  value={editingProduct.status}
+                  onChange={(e) => setEditingProduct((p) => ({ ...p, status: e.target.value }))}
+                  className={inputClass + " appearance-none cursor-pointer"}
+                >
+                  <option value="IN-STORE">IN-STORE</option>
+                  <option value="OUT-STORE">OUT-STORE</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-word">
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,6 +185,29 @@ const EditProductDrawer = ({
       </div>
     </>
   );
+};
+
+EditProductDrawer.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  editingProduct: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    category: PropTypes.string,
+    status: PropTypes.string,
+    imageUrl: PropTypes.string,
+  }),
+  setEditingProduct: PropTypes.func.isRequired,
+  handleProductUpdate: PropTypes.func.isRequired,
+  actionLoading: PropTypes.string,
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ),
 };
 
 export default EditProductDrawer;
