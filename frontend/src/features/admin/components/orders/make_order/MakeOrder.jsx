@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import CategorySection from "./component/CategorySection";
 import SelectProducts from "./component/SelectProducts";
-import LocationPickerMap from "../../../../client/components/LocationPickerMap";
+import LocationPickerMap from "../../../../../components/layout/LocationPickerMap";
 import { formatMoney, resolveEntityId } from "../../../../../utils/helpers";
 import OrderSection from "./component/OrderSection";
 
