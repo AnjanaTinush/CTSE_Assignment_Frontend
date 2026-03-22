@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AuthService } from "../../../../services/auth.service";
 import { resolveEntityId } from "../../../../utils/helpers";
 
@@ -10,6 +10,7 @@ const INITIAL_ROLE_FORM = {
 
 export function useUserStore({ runAction, setError, loadUsers }) {
   const [roleForms, setRoleForms] = useState(INITIAL_ROLE_FORM);
+  const creatingRolesRef = useRef(new Set());
   const [lookupCustomerForm, setLookupCustomerForm] = useState({
     contactNumber: "",
     name: "",
@@ -28,6 +29,10 @@ export function useUserStore({ runAction, setError, loadUsers }) {
   };
 
   const handleCreateRoleUser = async (role) => {
+    if (creatingRolesRef.current.has(role)) {
+      return;
+    }
+
     const form = roleForms[role];
 
     if (!form.name.trim() || !form.contactNumber.trim()) {
@@ -35,25 +40,31 @@ export function useUserStore({ runAction, setError, loadUsers }) {
       return;
     }
 
-    await runAction(
-      `create-user:${role}`,
-      async () => {
-        await AuthService.createManagedUser({
-          name: form.name.trim(),
-          contactNumber: form.contactNumber.trim(),
-          password: form.password.trim() || form.contactNumber.trim(),
-          role,
-        });
+    creatingRolesRef.current.add(role);
 
-        setRoleForms((prev) => ({
-          ...prev,
-          [role]: { name: "", contactNumber: "", password: "" },
-        }));
+    try {
+      await runAction(
+        `create-user:${role}`,
+        async () => {
+          await AuthService.createManagedUser({
+            name: form.name.trim(),
+            contactNumber: form.contactNumber.trim(),
+            password: form.password.trim() || form.contactNumber.trim(),
+            role,
+          });
 
-        await loadUsers();
-      },
-      `${role} account created successfully.`,
-    );
+          setRoleForms((prev) => ({
+            ...prev,
+            [role]: { name: "", contactNumber: "", password: "" },
+          }));
+
+          await loadUsers();
+        },
+        `${role} account created successfully.`,
+      );
+    } finally {
+      creatingRolesRef.current.delete(role);
+    }
   };
 
   const handleLookupOrCreateCustomer = async () => {
