@@ -4,13 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   color-scheme: light;
   --ctse-bg-top: #e8f0fe;
   --ctse-bg-mid: #f8f9fc;
   --ctse-bg-bottom: #f1f3f4;
   --ctse-text: #202124;
-}
+} */
 
 * {
   margin: 0;
@@ -45,4 +45,11 @@ a {
 ::selection {
   background: #d2e3fc;
   color: #1f2937;
+}
+
+.gradient-border {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(to right, #0a6cdf, #39a833, #f3c90d, #fc3613) border-box;
 }
