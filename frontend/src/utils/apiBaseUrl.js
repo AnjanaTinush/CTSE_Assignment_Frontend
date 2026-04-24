@@ -3,6 +3,14 @@ const DEFAULT_API_PROXY_PATH = "/api";
 export function resolveApiBaseUrl() {
   const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
+  if (
+    typeof window !== "undefined" &&
+    window.location.hostname.endsWith("vercel.app")
+  ) {
+    // Keep browser calls same-origin in Vercel so rewrites can forward securely.
+    return DEFAULT_API_PROXY_PATH;
+  }
+
   if (!configuredBaseUrl) {
     return DEFAULT_API_PROXY_PATH;
   }
