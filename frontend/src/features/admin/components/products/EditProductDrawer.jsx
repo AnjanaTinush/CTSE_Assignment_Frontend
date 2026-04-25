@@ -6,6 +6,15 @@ const inputClass =
 
 const labelClass = "text-[10px] font-semibold uppercase tracking-[0.2em] text-word";
 
+const DUMMY_CATEGORIES = [
+  { _id: "dummy-fruits", name: "Fruits" },
+  { _id: "dummy-vegetables", name: "Vegetables" },
+  { _id: "dummy-dairy", name: "Dairy" },
+  { _id: "dummy-bakery", name: "Bakery" },
+  { _id: "dummy-beverages", name: "Beverages" },
+  { _id: "dummy-snacks", name: "Snacks" },
+];
+
 const EditProductDrawer = ({
   isOpen,
   onClose,
@@ -16,6 +25,8 @@ const EditProductDrawer = ({
   categories,
 }) => {
   if (!isOpen || !editingProduct) return null;
+
+  const categoryOptions = categories?.length ? categories : DUMMY_CATEGORIES;
 
   return (
     <>
@@ -70,8 +81,8 @@ const EditProductDrawer = ({
                   className={inputClass + " appearance-none cursor-pointer"}
                 >
                   <option value="">Select a category</option>
-                  {(categories || []).map((cat) => (
-                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  {categoryOptions.map((cat) => (
+                    <option key={cat._id || cat.name} value={cat.name}>{cat.name}</option>
                   ))}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-word">

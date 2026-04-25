@@ -6,6 +6,15 @@ const inputClass =
 
 const labelClass = "text-[10px] font-semibold uppercase tracking-[0.2em] text-word";
 
+const DUMMY_CATEGORIES = [
+  { _id: "dummy-fruits", name: "Fruits" },
+  { _id: "dummy-vegetables", name: "Vegetables" },
+  { _id: "dummy-dairy", name: "Dairy" },
+  { _id: "dummy-bakery", name: "Bakery" },
+  { _id: "dummy-beverages", name: "Beverages" },
+  { _id: "dummy-snacks", name: "Snacks" },
+];
+
 const ProductDrawer = ({
   isOpen,
   onClose,
@@ -17,17 +26,19 @@ const ProductDrawer = ({
 }) => {
   if (!isOpen) return null;
 
+  const categoryOptions = categories?.length ? categories : DUMMY_CATEGORIES;
+
   return (
     <>
       <button
         type="button"
-        className="fixed inset-0 z-40 w-full h-full bg-label/30 backdrop-blur-sm cursor-default"
+        className="fixed inset-0 z-40 w-full h-full cursor-default bg-label/30 backdrop-blur-sm"
         onClick={onClose}
         aria-label="Close drawer"
       />
 
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white border-l border-line shadow-2xl">
-        <div className="flex h-full flex-col">
+      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white border-l shadow-2xl border-line">
+        <div className="flex flex-col h-full">
 
           {/* Header */}
           <div className="border-b border-line bg-[#fcfaf6] px-6 py-5">
@@ -41,13 +52,13 @@ const ProductDrawer = ({
             onClick={onClose}
             className="absolute right-5 top-5 rounded-xl border border-line bg-white p-2 text-word transition hover:bg-[#f5f0ea] hover:text-label"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
+          <div className="flex-1 px-6 py-6 space-y-5 overflow-y-auto">
 
             <div className="flex flex-col gap-2">
               <label className={labelClass} htmlFor="name">Product Name</label>
@@ -70,12 +81,12 @@ const ProductDrawer = ({
                   className={inputClass + " appearance-none cursor-pointer"}
                 >
                   <option value="">Select a category</option>
-                  {(categories || []).map((cat) => (
-                    <option key={cat._id} value={cat.name}>{cat.name}</option>
+                  {categoryOptions.map((cat) => (
+                    <option key={cat._id || cat.name} value={cat.name}>{cat.name}</option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-word">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-word">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -94,8 +105,8 @@ const ProductDrawer = ({
                   <option value="IN-STORE">IN-STORE</option>
                   <option value="OUT-STORE">OUT-STORE</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-word">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-word">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -131,7 +142,7 @@ const ProductDrawer = ({
 
             <div className="flex flex-col gap-2">
               <label className={labelClass} htmlFor="imageUrl">
-                Image URL <span className="normal-case tracking-normal text-word/40">(optional)</span>
+                Image URL <span className="tracking-normal normal-case text-word/40">(optional)</span>
               </label>
               <input
                 id="imageUrl"
